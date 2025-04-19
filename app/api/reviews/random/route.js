@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Review from '@/models/Review';
+import Movie from '@/models/Movie';
 import connectMongo from '@/lib/mongoose';
 
 export async function GET(request) {
@@ -14,7 +15,7 @@ export async function GET(request) {
         let matchStage = {};
         if (decades.length > 0) {
             const yearRanges = decades.map(startYear => ({
-                'movie.year': {
+                year: {
                     $gte: startYear,
                     $lt: startYear + 10
                 }
@@ -22,36 +23,46 @@ export async function GET(request) {
             matchStage.$or = yearRanges;
         }
 
-        // Get random reviews with their associated movies
-        const reviews = await Review.aggregate([
+        // First, get a random movie that has reviews
+        const randomMovie = await Movie.aggregate([
+            { $match: matchStage },
             {
                 $lookup: {
-                    from: 'movies',
-                    localField: 'movie',
-                    foreignField: '_id',
-                    as: 'movie'
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'movie',
+                    as: 'reviews'
                 }
             },
-            { $unwind: '$movie' },
-            { $match: matchStage },
+            { $match: { reviews: { $exists: true, $ne: [] } } },
+            { $sample: { size: 1 } }
+        ]);
+
+        if (!randomMovie.length) {
+            return NextResponse.json(
+                { error: 'No movies with reviews found for the selected decades' },
+                { status: 404 }
+            );
+        }
+
+        const selectedMovie = randomMovie[0];
+
+        // Then get random reviews for that movie
+        const reviews = await Review.aggregate([
+            { $match: { movie: selectedMovie._id } },
             { $sample: { size: count } },
             {
                 $project: {
                     _id: 1,
                     comment: 1,
-                    movieId: '$movie._id',
-                    movie: {
-                        _id: '$movie._id',
-                        title: '$movie.title',
-                        year: '$movie.year'
-                    }
+                    movieId: '$movie'
                 }
             }
         ]);
 
         if (!reviews.length) {
             return NextResponse.json(
-                { error: 'No reviews found for the selected decades' },
+                { error: 'No reviews found for the selected movie' },
                 { status: 404 }
             );
         }
@@ -63,9 +74,8 @@ export async function GET(request) {
                 movieId: review.movieId
             })),
             movie: {
-                _id: reviews[0].movie._id,
-                title: reviews[0].movie.title,
-                year: reviews[0].movie.year
+                _id: selectedMovie._id,
+                title: process.env.NEXT_PUBLIC_DEBUG_MODE === 'true' ? selectedMovie.title : null,
             }
         });
     } catch (error) {
