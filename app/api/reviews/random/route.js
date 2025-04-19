@@ -10,8 +10,6 @@ export async function GET(request) {
         const count = parseInt(searchParams.get('count')) || 1;
         const decades = searchParams.get('decades')?.length > 0 ? searchParams.get('decades').split(',').map(Number) : [];
 
-        console.log(decades, decades.length);
-
         // Build the query based on selected decades
         let matchStage = {};
         if (decades.length > 0) {

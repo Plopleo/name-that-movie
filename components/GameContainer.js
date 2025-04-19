@@ -14,13 +14,11 @@ const Confetti = dynamic(() => import('react-confetti'), {
 });
 
 export default function GameContainer({
-    score,
     setScore,
-    attempts,
     setAttempts,
     numReviews,
-    setNumReviews,
-    selectedDecades
+    selectedDecades,
+    setGuessHistory
 }) {
     const [reviews, setReviews] = useState([])
     const [currentMovie, setCurrentMovie] = useState(null)
@@ -29,6 +27,7 @@ export default function GameContainer({
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [correctMovie, setCorrectMovie] = useState(null)
     const [showConfetti, setShowConfetti] = useState(false)
+    const [wrongGuesses, setWrongGuesses] = useState(0)
     const [windowSize, setWindowSize] = useState({
         width: typeof window !== 'undefined' ? window.innerWidth : 0,
         height: typeof window !== 'undefined' ? window.innerHeight : 0
@@ -39,6 +38,8 @@ export default function GameContainer({
         try {
             setIsLoading(true)
             setShowConfetti(false)
+            setWrongGuesses(0)
+            setGuessHistory([])
             const { data } = await axios.get(`/api/reviews/random?count=${numReviews}&decades=${selectedDecades.join(',')}`)
             setReviews(data.reviews)
             setCurrentMovie(data.movie)
@@ -50,7 +51,7 @@ export default function GameContainer({
         } finally {
             setIsLoading(false)
         }
-    }, [numReviews, selectedDecades])
+    }, [numReviews, selectedDecades, setGuessHistory])
 
     useEffect(() => {
         if (selectedDecades.length > 0) {
@@ -80,14 +81,34 @@ export default function GameContainer({
                 guess: guess
             })
 
+            setGuessHistory(prev => [...prev, {
+                text: guess,
+                similarity: data.similarity
+            }])
+
             if (data.isCorrect) {
                 setScore(prev => prev + 1)
                 setCorrectMovie(data.movie)
                 setShowConfetti(true)
+            } else {
+                setWrongGuesses(prev => prev + 1)
             }
         } catch (err) {
             setError('Failed to validate guess. Please try again.')
             console.error('Error validating guess:', err)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    async function handleReveal() {
+        try {
+            setIsSubmitting(true)
+            const { data } = await axios.get(`/api/reviews/reveal?reviewId=${reviews[0]._id}`)
+            setCorrectMovie(data.movie)
+        } catch (err) {
+            setError('Failed to reveal movie details. Please try again.')
+            console.error('Error revealing movie:', err)
         } finally {
             setIsSubmitting(false)
         }
@@ -127,7 +148,7 @@ export default function GameContainer({
                     <span className="loading loading-spinner loading-lg"></span>
                 </div>
             ) : (
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full gap-4">
                     <div className="space-y-6 max-h-[60vh] overflow-y-auto">
                         {reviews.map((review) => (
                             <CardReview key={review._id} review={review.comment} />
@@ -147,6 +168,16 @@ export default function GameContainer({
                         </div>
                         <ButtonNext onClick={fetchNewReviews} isLoading={isLoading} />
                     </div>
+                    {wrongGuesses >= 3 && (
+                        <div className="flex justify-end">
+                            <button
+                                onClick={handleReveal}
+                                className="btn btn-outline btn-error"
+                            >
+                                Reveal Movie ?
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

@@ -5,22 +5,38 @@ export function CardMovieDetails({ movie }) {
         <div className="bg-black/90 text-gray-200 rounded-lg overflow-hidden">
             <div className="flex flex-col md:flex-row">
                 {/* Movie Poster Section */}
-                <div className="md:w-1/3 relative">
-                    <div className="aspect-[2/3] relative">
-                        {movie.poster ? (
+                <div className="md:w-1/3 relative min-h-[500px] w-full flex items-center">
+                    {/* Blurred Background */}
+                    {movie.poster && (
+                        <div className="absolute inset-0">
                             <Image
                                 src={movie.poster}
-                                alt={`${movie.title} poster`}
+                                alt=""
                                 fill
-                                className="object-cover"
+                                className="object-cover blur-xl scale-110"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
                             />
+                            <div className="absolute inset-0 bg-black/70" />
+                        </div>
+                    )}
+
+                    {/* Main Poster */}
+                    <div className="relative w-full flex items-center justify-center p-4">
+                        {movie.poster ? (
+                            <div className="relative w-full aspect-[2/3]">
+                                <Image
+                                    src={movie.poster}
+                                    alt={`${movie.title} poster`}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
+                                />
+                            </div>
                         ) : (
                             <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                                 <span className="text-gray-500">No poster available</span>
                             </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     </div>
                 </div>
 

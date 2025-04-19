@@ -6,12 +6,14 @@ import GameStats from '../components/GameStats'
 import RangeReviews from '../components/RangeReviews'
 import DecadeSelector from '../components/DecadeSelector'
 import Footer from '../components/Footer'
+import GuessHistory from '../components/GuessHistory'
 
 export default function Home() {
   const [score, setScore] = useState(0)
   const [attempts, setAttempts] = useState(0)
   const [numReviews, setNumReviews] = useState(3)
   const [selectedDecades, setSelectedDecades] = useState([])
+  const [guessHistory, setGuessHistory] = useState([])
 
   return (
     <main className="min-h-screen bg-base-200 flex flex-col">
@@ -48,6 +50,7 @@ export default function Home() {
               setNumReviews={setNumReviews}
               selectedDecades={selectedDecades}
               setSelectedDecades={setSelectedDecades}
+              setGuessHistory={setGuessHistory}
             />
           </div>
         </div>
@@ -65,6 +68,8 @@ export default function Home() {
                 <DecadeSelector onDecadesChange={setSelectedDecades} />
               </div>
             </div>
+
+            <GuessHistory guesses={guessHistory} />
           </div>
         </div>
       </div>

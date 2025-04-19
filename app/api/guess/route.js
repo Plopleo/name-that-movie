@@ -41,6 +41,7 @@ export async function POST(request) {
         return NextResponse.json({
             isCorrect,
             movie: isCorrect ? review.movie : null,
+            similarity
         });
     } catch (error) {
         console.error('Error validating guess:', error);
