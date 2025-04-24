@@ -37,6 +37,8 @@ export default function Home() {
                   <DecadeSelector onDecadesChange={setSelectedDecades} />
                 </div>
               </div>
+
+              <GuessHistory guesses={guessHistory} />
             </div>
           </div>
 
