@@ -70,7 +70,7 @@ export async function GET(request) {
         return NextResponse.json({
             reviews: reviews.map(review => ({
                 _id: review._id,
-                comment: review.comment,
+                comment: replaceMovieTitleInComment(review.comment, selectedMovie.title),
                 movieId: review.movieId
             })),
             movie: {
@@ -87,4 +87,13 @@ export async function GET(request) {
             { status: 500 }
         );
     }
-} 
+}
+
+function replaceMovieTitleInComment(comment, movieTitle) {
+    if (!comment || !movieTitle) return comment;
+
+    // Create a case-insensitive regex pattern
+    const pattern = new RegExp(movieTitle, 'gi');
+
+    return comment.replace(pattern, '[SPOILER]');
+}
