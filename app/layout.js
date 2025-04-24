@@ -12,14 +12,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "Name That Movie - Guess Movies from Letterboxd Reviews";
+const description = "Test your movie knowledge! Guess the movie title based on Letterboxd reviews. A fun and challenging game for film enthusiasts.";
+const websiteName = "Name That Movie";
+
 export const metadata = {
-  title: "Name That Movie - Guess Movies from Letterboxd Reviews",
-  description: "Test your movie knowledge! Guess the movie title based on Letterboxd reviews. A fun and challenging game for film enthusiasts.",
-  keywords: "movie game, letterboxd, film quiz, movie guessing game, film trivia",
+  title: title,
+  applicationName: websiteName,
+  description: description,
+  keywords: ['movie game', 'letterboxd', 'film quiz', 'movie guessing game', 'film trivia'],
   openGraph: {
-    title: "Name That Movie - Guess Movies from Letterboxd Reviews",
-    description: "Test your movie knowledge! Guess the movie title based on Letterboxd reviews. A fun and challenging game for film enthusiasts.",
+    title: title,
+    description: description,
+    url: 'https://name-that-movie.leopold.dev',
     type: "website",
+    siteName: websiteName,
+    images: [
+      {
+        url: 'https://name-that-movie.leopold.dev/img/og.png',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: title,
+    description: description,
+    images: [
+      {
+        url: 'https://name-that-movie.leopold.dev/img/og.png',
+      },
+    ],
   },
 };
 
