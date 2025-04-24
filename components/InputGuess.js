@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export function InputGuess({ onGuess, isSubmitting }) {
+export function InputGuess({ onGuess, isSubmitting, hasError }) {
     const [guess, setGuess] = useState('')
 
     function handleSubmit(e) {
@@ -18,7 +18,7 @@ export function InputGuess({ onGuess, isSubmitting }) {
             <input
                 type="text"
                 placeholder="Enter movie title..."
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${hasError ? 'input-error' : ''}`}
                 value={guess}
                 onChange={(e) => setGuess(e.target.value)}
                 disabled={isSubmitting}

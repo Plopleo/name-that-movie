@@ -30,6 +30,7 @@ export default function GameContainer({
     const [correctMovie, setCorrectMovie] = useState(null)
     const [showConfetti, setShowConfetti] = useState(false)
     const [wrongGuesses, setWrongGuesses] = useState(0)
+    const [shouldShake, setShouldShake] = useState(false)
     const [windowSize, setWindowSize] = useState({
         width: typeof window !== 'undefined' ? window.innerWidth : 0,
         height: typeof window !== 'undefined' ? window.innerHeight : 0
@@ -94,6 +95,8 @@ export default function GameContainer({
                 setShowConfetti(true)
             } else {
                 setWrongGuesses(prev => prev + 1)
+                setShouldShake(true)
+                setTimeout(() => setShouldShake(false), 100)
             }
         } catch (err) {
             setError('Failed to validate guess. Please try again.')
@@ -173,11 +176,12 @@ export default function GameContainer({
                             </div>
                         )}
                     </div>
-                    <div className="flex gap-2 w-full mt-4">
+                    <div className={`flex gap-2 w-full mt-4 ${shouldShake ? 'animate-ping' : ''}`}>
                         <div className="flex-1">
                             <InputGuess
                                 onGuess={handleGuess}
                                 isSubmitting={isSubmitting}
+                                hasError={shouldShake}
                             />
                         </div>
                         <ButtonNext onClick={fetchNewReviews} isLoading={isLoading} />
