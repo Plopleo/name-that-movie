@@ -18,7 +18,9 @@ export default function GameContainer({
     setAttempts,
     numReviews,
     selectedDecades,
-    setGuessHistory
+    setGuessHistory,
+    showYear,
+    showDirector
 }) {
     const [reviews, setReviews] = useState([])
     const [currentMovie, setCurrentMovie] = useState(null)
@@ -149,6 +151,18 @@ export default function GameContainer({
                 </div>
             ) : (
                 <div className="flex flex-col w-full gap-4">
+                    <div className="flex gap-4 justify-center">
+                        {showYear && currentMovie?.year && (
+                            <div className="text-center text-sm">
+                                Year: <span className="text-primary">{currentMovie.year}</span>
+                            </div>
+                        )}
+                        {showDirector && currentMovie?.director && (
+                            <div className="text-center text-sm">
+                                Director: <span className="text-primary">{currentMovie.director}</span>
+                            </div>
+                        )}
+                    </div>
                     <div className="space-y-6 max-h-[60vh] overflow-y-auto">
                         {reviews.map((review) => (
                             <CardReview key={review._id} review={review.comment} />

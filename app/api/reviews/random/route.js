@@ -76,6 +76,8 @@ export async function GET(request) {
             movie: {
                 _id: selectedMovie._id,
                 title: process.env.NEXT_PUBLIC_DEBUG_MODE === 'true' ? selectedMovie.title : null,
+                year: selectedMovie.year,
+                director: selectedMovie.director,
             }
         });
     } catch (error) {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 
-export default function DecadeSelector({ onDecadesChange }) {
+export default function SelectorDecades({ onDecadesChange }) {
     const [selectedDecades, setSelectedDecades] = useState([])
     const [isInitialized, setIsInitialized] = useState(false)
     const decades = useMemo(() => [

@@ -4,9 +4,10 @@ import { useState } from 'react'
 import GameContainer from '../components/GameContainer'
 import GameStats from '../components/GameStats'
 import RangeReviews from '../components/RangeReviews'
-import DecadeSelector from '../components/DecadeSelector'
+import SelectorDecades from '../components/SelectorDecades'
 import Footer from '../components/Footer'
 import GuessHistory from '../components/GuessHistory'
+import ToggleClues from '../components/ToggleClues'
 
 export default function Home() {
   const [score, setScore] = useState(0)
@@ -14,6 +15,8 @@ export default function Home() {
   const [numReviews, setNumReviews] = useState(3)
   const [selectedDecades, setSelectedDecades] = useState([])
   const [guessHistory, setGuessHistory] = useState([])
+  const [showYear, setShowYear] = useState(false)
+  const [showDirector, setShowDirector] = useState(false)
 
   return (
     <main className="min-h-screen bg-base-200 flex flex-col">
@@ -34,7 +37,13 @@ export default function Home() {
                 <div className="collapse-title font-semibold">Settings</div>
                 <div className="collapse-content text-sm flex flex-col gap-4">
                   <RangeReviews numReviews={numReviews} setNumReviews={setNumReviews} />
-                  <DecadeSelector onDecadesChange={setSelectedDecades} />
+                  <SelectorDecades onDecadesChange={setSelectedDecades} />
+                  <ToggleClues
+                    showYear={showYear}
+                    setShowYear={setShowYear}
+                    showDirector={showDirector}
+                    setShowDirector={setShowDirector}
+                  />
                 </div>
               </div>
 
@@ -53,6 +62,8 @@ export default function Home() {
               selectedDecades={selectedDecades}
               setSelectedDecades={setSelectedDecades}
               setGuessHistory={setGuessHistory}
+              showYear={showYear}
+              showDirector={showDirector}
             />
           </div>
         </div>
@@ -67,7 +78,13 @@ export default function Home() {
               <div className="collapse-title font-semibold">Settings</div>
               <div className="collapse-content text-sm flex flex-col gap-4">
                 <RangeReviews numReviews={numReviews} setNumReviews={setNumReviews} />
-                <DecadeSelector onDecadesChange={setSelectedDecades} />
+                <SelectorDecades onDecadesChange={setSelectedDecades} />
+                <ToggleClues
+                  showYear={showYear}
+                  setShowYear={setShowYear}
+                  showDirector={showDirector}
+                  setShowDirector={setShowDirector}
+                />
               </div>
             </div>
 
