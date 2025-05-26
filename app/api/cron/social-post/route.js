@@ -64,7 +64,7 @@ export async function GET(request) {
     try {
         // 4. Create the tweet
         const tweet = await client.v2.tweet({
-            text: '🎬 Can you guess this movie?\n\nPlay the gameand test your film knowledge! 🎯\n\nTry it here ▶️https://name-that-movie.leopold.dev \n\n#MovieQuiz #GuessTheMovie',
+            text: '🎬 Can you guess this movie?\n\nPlay the game and test your film knowledge! 🎯\n\nTry it here ▶️https://name-that-movie.leopold.dev \n\n#MovieQuiz #GuessTheMovie',
             media: { media_ids: [mediaId] },
         });
 
